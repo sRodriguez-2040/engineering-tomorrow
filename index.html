@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Engineering Tomorrow: Artificial Organs & Lab-Grown Tissue</title>
+  <meta name="description" content="Explore the future of tissue engineering, lab-grown organs, and the technology aiming to solve the organ shortage." />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/ScrollTrigger.min.js"></script>
+  
+  <style>
+    :root {
+      --bg: #06090f;
+      --bg-card: #0d1526;
+      --bg-card2: #111f3a;
+      --accent: #14b8a6;
+      --accent-hover: #0f9687;
+      --accent2: #f59e0b;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --border: #1e3a5f;
+      --font-display: 'Georgia', serif;
+      --font-body: 'Inter', Georgia, serif;
+      --sidebar-width: 280px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    a:hover {
+      color: var(--accent-hover);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background-color: var(--bg-card);
+      border-right: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      margin-bottom: 2rem;
+    }
+
+    .sidebar-title {
+      font-size: 1.5rem;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-title span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      background-color: var(--bg-card2);
+      color: var(--text);
+    }
+
+    .nav-link.active {
+      background-color: rgba(20, 184, 166, 0.1);
+      color: var(--accent);
+      border-left: 3px solid var(--accent);
+    }
+
+    /* Mobile Menu Toggle */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 200;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    section {
+      display: none;
+      padding: 4rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -10px;
+      width: 60px;
+      height: 4px;
+      background-color: var(--accent);
+      border-radius: 2px;
+    }
+
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Typography & Utilities */
+    .text-accent { color: var(--accent); }
+    .text-accent2 { color: var(--accent2); }
+    .text-muted { color: var(--text-muted); }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .mb-4 { margin-bottom: 2rem; }
+    .mt-4 { margin-top: 2rem; }
+    
+    p { margin-bottom: 1rem; }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+      font-family: var(--font-body);
+    }
+    .btn:hover {
+      background-color: var(--accent-hover);
+      transform: scale(1.02);
+    }
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    .btn-outline:hover {
+      background-color: rgba(20, 184, 166, 0.1);
+    }
+
+    /* Forms */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+    input[type="number"],
+    select,
+    input[type="range"] {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: var(--bg-card2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      font-family: var(--font-body);
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* Home Hero */
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .hero h1 {
+      font-size: 4.5rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin-bottom: 2rem;
+    }
+    .stats-row {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 700;
+      font-family: var(--font-display);
+      color: var(--accent);
+    }
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+
+
+})
+
+    /* Pipeline Graphic */
+    .pipeline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 3rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .pipeline-step {
+      background: var(--bg-card2);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      text-align: center;
+      flex: 1;
+      min-width: 120px;
+    }
+    .pipeline-arrow {
+      color: var(--accent);
+      font-size: 1.3rem;
+      position: relative;
+      top: 207px;
+}
+    }
+
+    /* Interactive Builder */
+    .builder-components {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .builder-item {
+      background: var(--bg-card2);
+      border: 2px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .builder-item:hover {
+      border-color: var(--accent);
+    }
+    .builder-item.selected {
+      background: rgba(20, 184, 166, 0.2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .build-zone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: rgba(13, 21, 38, 0.5);
+    }
+
+    /* Progress Bars */
+    .progress-wrapper {
+      margin-bottom: 1rem;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .progress-bar-bg {
+      height: 8px;
+      background: var(--bg-card2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 1s ease-out;
+    }
+    .progress-bar-fill.amber {
+      background: var(--accent2);
+    }
+
+    /* Chart Container */
+    .chart-container {
+      position: relative;
+      height: 400px;
+      width: 100%;
+      margin: 2rem 0;
+    }
+
+    /* Timeline */
+    .timeline-container {
+      width: 100%;
+      overflow-x: auto;
+      padding: 2rem 0;
+      scrollbar-color: var(--accent) var(--bg-card);
+      scrollbar-width: thin;
+    }
+    .timeline {
+      display: flex;
+      min-width: max-content;
+      position: relative;
+      padding-top: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 27px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+    .timeline-item {
+      width: 250px;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .timeline-dot {
+      width: 16px;
+      height: 16px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      border: 4px solid var(--bg);
+    }
+    .timeline-year {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      font-family: var(--font-display);
+    }
+    .timeline-content {
+      background: var(--bg-card);
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-family: var(--font-display);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    tbody tr:hover {
+      background: var(--bg-card2);
+    }
+
+    /* Canvas Lab */
+    .canvas-container {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* Cards for Simulator */
+    .organ-card {
+      background: var(--bg-card2);
+      border: 2px solid var(--border);
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .organ-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-5px);
+    }
+    .organ-card.selected {
+      border-color: var(--accent);
+      background: rgba(20, 184, 166, 0.1);
+    }
+    .organ-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+      section {
+        padding: 5rem 2rem 2rem 2rem;
+      }
+      .grid-2, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+      .pipeline {
+        flex-direction: column;
+      }
+      .pipeline-arrow {
+        transform: rotate(90deg);
+      }
+      .hero h1 { font-size: 3rem; }
+      .stats-row { flex-direction: column; gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="menu-toggle" id="menuToggle">Menu</button>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Engineering<br><span>Tomorrow</span></div>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a class="nav-link active" data-target="home">Introduction</a></li>
+      <li><a class="nav-link" data-target="chapter1">1. The Organ Shortage</a></li>
+      <li><a class="nav-link" data-target="chapter2">2. How It Works</a></li>
+      <li><a class="nav-link" data-target="chapter3">3. Biomaterials</a></li>
+      <li><a class="nav-link" data-target="chapter4">4. Organ Designer</a></li>
+      <li><a class="nav-link" data-target="chapter5">5. Simulator Report</a></li>
+      <li><a class="nav-link" data-target="chapter6">6. Virtual Lab</a></li>
+      <li><a class="nav-link" data-target="chapter7">7. Ethical Debate</a></li>
+      <li><a class="nav-link" data-target="chapter8">8. Future Tech</a></li>
+      <li><a class="nav-link" data-target="research">Research Analysis</a></li>
+    </ul>
+  </aside>
+
+  <main class="main-content">
+    
+    <!-- Home Section -->
+    <section id="home" class="active">
+      <div class="hero">
+        <h1>Engineering <span class="text-accent">Tomorrow</span></h1>
+        <p>A journey into the science, ethics, and potential of artificial organs and lab-grown tissue. Discover how regenerative medicine is working to solve the global organ shortage.</p>
+        <button class="btn" onclick="navigate('chapter1')">Start Exploring</button>
+        
+        <div class="stats-row">
+          <div class="stat-item">
+            <span class="stat-value" id="stat-waiting" data-target="100000">0</span>
+            <span class="stat-label">Patients Waiting</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="stat-transplants" data-target="41000">0</span>
+            <span class="stat-label">Transplants/Year</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="stat-time" data-target="5">0</span>
+            <span class="stat-label">Years Avg Wait</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 1: Organ Shortage -->
+    <section id="chapter1">
+      <h2 class="section-title">The Organ Shortage</h2>
+      <div class="card">
+        <p>The demand for healthy organs far outpaces the supply of viable donors. Despite advances in medical technology, millions worldwide suffer from end-stage organ failure. Relying solely on human donors presents logistical, medical, and ethical bottlenecks.</p>
+        <p>Success rates for traditional transplants are high, but the waiting list is deadly. Every 10 minutes, someone is added to the national transplant waiting list.</p>
+      </div>
+      
+      <div class="grid-2">
+        <div class="card">
+          <h3 class="mb-4">Would You Get a Transplant?</h3>
+          <div class="form-group">
+            <label>Age</label>
+            <input type="number" id="c1-age" min="1" max="100" value="45">
+          </div>
+          <div class="form-group">
+            <label>Blood Type</label>
+            <select id="c1-blood">
+              <option value="A">A (+/-)</option>
+              <option value="B">B (+/-)</option>
+              <option value="AB">AB (+/-)</option>
+              <option value="O">O (+/-)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Organ Needed</label>
+            <select id="c1-organ">
+              <option value="Kidney">Kidney</option>
+              <option value="Heart">Heart</option>
+              <option value="Liver">Liver</option>
+              <option value="Lung">Lung</option>
+              <option value="Pancreas">Pancreas</option>
+            </select>
+          </div>
+          <button class="btn" onclick="calculateWaitTime()">Estimate My Wait Time</button>
+        </div>
+        
+        <div class="card" id="c1-results" style="display:none;">
+          <h3 class="mb-2">Estimation Results</h3>
+          <p class="text-muted text-sm mb-4">Educational estimate only.</p>
+          <div class="mb-4">
+            <div class="stat-label">Estimated Wait Time</div>
+            <div class="stat-value text-accent2" id="c1-res-time">--</div>
+          </div>
+          <div class="mb-4">
+            <div class="stat-label">Compatibility Challenge</div>
+            <div class="stat-value" style="font-size:1.5rem;" id="c1-res-compat">--</div>
+          </div>
+          <p id="c1-res-desc" class="text-muted"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 2: How It Works -->
+    <section id="chapter2">
+      <h2 class="section-title">How Lab-Grown Organs Work</h2>
+      <p class="mb-4">Tissue engineering combines scaffolds, cells, and biologically active molecules into functional tissues. The goal is to assemble functional constructs that restore, maintain, or improve damaged tissues or whole organs.</p>
+      
+      <div class="pipeline">
+        <div class="pipeline-step">Stem Cells</div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">Scaffold</div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">Cell Growth</div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">Bioreactor</div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step">Implantation</div>
+      </div>
+
+      <div class="card mt-4">
+        <h3 class="mb-4">Build Your Own Organ</h3>
+        <p class="mb-4 text-muted">Select the necessary components to create a viable tissue construct.</p>
+        
+        <div class="builder-components" id="builder-items">
+          <div class="builder-item" data-type="cells">Stem Cells</div>
+          <div class="builder-item" data-type="scaffold">Scaffold</div>
+          <div class="builder-item" data-type="factors">Growth Factors</div>
+          <div class="builder-item" data-type="vessels">Blood Vessels</div>
+        </div>
+        
+        <div class="build-zone">
+          <h4 class="mb-4">Construct Assembly</h4>
+          <button class="btn" onclick="testOrganDesign()">Test Your Design</button>
+          <div id="build-result" class="mt-4" style="font-weight: 500;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 3: Biomaterials -->
+    <section id="chapter3">
+      <h2 class="section-title">Biomaterials</h2>
+      <div class="grid-2">
+        <div>
+          <p>The scaffold provides the structural support for cells to attach, grow, and differentiate. Choosing the right material is a balance of mechanical properties and biological compatibility.</p>
+          <div class="mb-4">
+            <h4 class="text-accent mb-1">Collagen</h4>
+            <p class="text-sm text-muted mb-2">Natural protein abundant in the body. Excellent for cell attachment but mechanically weak.</p>
+            <h4 class="text-accent mb-1">Hydrogels</h4>
+            <p class="text-sm text-muted mb-2">Water-swollen polymer networks. Great for soft tissues but lack structural rigidity.</p>
+            <h4 class="text-accent mb-1">Decellularized Organs</h4>
+            <p class="text-sm text-muted mb-2">Donor organs washed of cells leaving only the ECM. Perfect architecture, high cost.</p>
+            <h4 class="text-accent mb-1">Synthetic Polymers</h4>
+            <p class="text-sm text-muted">Highly tunable strength and degradation rates, but often lack natural cell-binding sites.</p>
+          </div>
+          
+          <div class="builder-components">
+            <button class="btn btn-outline" onclick="updateRadar(0)">Collagen</button>
+            <button class="btn btn-outline" onclick="updateRadar(1)">Hydrogel</button>
+            <button class="btn btn-outline" onclick="updateRadar(2)">Decellularized</button>
+            <button class="btn btn-outline" onclick="updateRadar(3)">Synthetic</button>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="chart-container">
+            <canvas id="materialsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 4: Organ Designer -->
+    <section id="chapter4">
+      <h2 class="section-title">Organ Designer</h2>
+      <p class="mb-4">Design your own tissue-engineered organ. Configure the parameters to optimize for success likelihood while managing rejection risks and costs.</p>
+      
+      <div class="grid-2">
+        <div class="card">
+          <div class="form-group">
+            <label>Scaffold Type</label>
+            <select id="d-scaffold">
+              <option value="collagen">Collagen Matrix</option>
+              <option value="hydrogel">Hydrogel</option>
+              <option value="synthetic">Synthetic Polymer</option>
+              <option value="ecm">Decellularized ECM</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Cell Type</label>
+            <select id="d-cells">
+              <option value="adult">Adult Stem Cells</option>
+              <option value="ipsc">iPSC</option>
+              <option value="embryonic">Embryonic Stem Cells</option>
+              <option value="diff">Differentiated Cells</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Growth Factors</label>
+            <select id="d-factors">
+              <option value="standard">Standard Protocol</option>
+              <option value="enhanced">Enhanced Cocktail</option>
+              <option value="minimal">Minimal</option>
+              <option value="custom">Custom Mix</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Printing Method</label>
+            <select id="d-print">
+              <option value="inkjet">Inkjet</option>
+              <option value="extrusion">Extrusion</option>
+              <option value="laser">Laser-Assisted</option>
+              <option value="manual">Manual Seeding</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Bioreactor</label>
+            <select id="d-reactor">
+              <option value="rotating">Rotating Wall</option>
+              <option value="perfusion">Perfusion</option>
+              <option value="static">Static Culture</option>
+              <option value="hollow">Hollow Fiber</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Vascularization</label>
+            <select id="d-vasc">
+              <option value="angio">Angiogenesis</option>
+              <option value="preformed">Pre-formed Channels</option>
+              <option value="bioprinted">Bioprinted</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+          <button class="btn" onclick="calculateDesign()">Calculate Results</button>
+        </div>
+        
+        <div class="card">
+          <h3 class="mb-4">Design Assessment</h3>
+          
+          <div class="progress-wrapper">
+            <div class="progress-header">
+              <span>Success Likelihood</span>
+              <span id="res-success-val">--%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="res-success-bar"></div>
+            </div>
+          </div>
+          
+          <div class="progress-wrapper mb-4">
+            <div class="progress-header">
+              <span>Rejection Risk</span>
+              <span id="res-reject-val">--%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill amber" id="res-reject-bar"></div>
+            </div>
+          </div>
+          
+          <div class="grid-2 mt-4">
+            <div>
+              <div class="stat-label">Est. Cost</div>
+              <div class="stat-value text-accent" style="font-size:2rem;" id="res-cost">--</div>
+            </div>
+            <div>
+              <div class="stat-label">Dev Time</div>
+              <div class="stat-value text-accent" style="font-size:2rem;" id="res-time">--</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 5: Organ Simulator -->
+    <section id="chapter5">
+      <h2 class="section-title">Organ Simulator</h2>
+      <p class="mb-4">Generate an engineering report for specific organs.</p>
+      
+      <div id="sim-step-1">
+        <h3 class="mb-4">Choose Target Organ</h3>
+        <div class="grid-4 mb-4" id="sim-organs">
+          <div class="organ-card" data-val="Kidney"><h3>Kidney</h3><p class="text-muted text-sm">Complex filtration</p></div>
+          <div class="organ-card" data-val="Heart"><h3>Heart</h3><p class="text-muted text-sm">Muscle & vessels</p></div>
+          <div class="organ-card" data-val="Liver"><h3>Liver</h3><p class="text-muted text-sm">Metabolic factory</p></div>
+          <div class="organ-card" data-val="Bladder"><h3>Bladder</h3><p class="text-muted text-sm">Hollow organ</p></div>
+        </div>
+      </div>
+      
+      <div id="sim-step-2" class="card" style="display:none; margin-bottom:2rem;">
+        <h3 class="mb-4">Configure Parameters for: <span id="sim-target-organ" class="text-accent"></span></h3>
+        <div class="grid-4">
+          <div class="form-group">
+            <label>Stem Cells</label>
+            <select id="sim-cells">
+              <option value="adult">Adult</option>
+              <option value="ipsc">iPSC</option>
+              <option value="embryonic">Embryonic</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Scaffold</label>
+            <select id="sim-scaffold">
+              <option value="collagen">Collagen</option>
+              <option value="synthetic">Synthetic</option>
+              <option value="ecm">Decellularized</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Printing</label>
+            <select id="sim-print">
+              <option value="inkjet">Inkjet</option>
+              <option value="extrusion">Extrusion</option>
+              <option value="laser">Laser</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex; align-items:flex-end;">
+            <button class="btn" style="width:100%;" onclick="generateReport()">Generate Report</button>
+          </div>
+        </div>
+      </div>
+      
+      <div id="sim-report" class="card" style="display:none;">
+        <h3 class="mb-4 border-bottom pb-2">Engineering Report</h3>
+        <div class="grid-2">
+          <div>
+            <h4 class="text-accent mb-2" id="rep-title">Organ Configuration</h4>
+            <p class="mb-4 text-muted text-sm" id="rep-params"></p>
+            
+            <h4 class="mb-2">Major Challenges</h4>
+            <ul class="text-muted mb-4 pl-4" id="rep-challenges" style="margin-left: 1.5rem;"></ul>
+            
+            <h4 class="mb-2">Possible Improvements</h4>
+            <ul class="text-muted pl-4" id="rep-improvements" style="margin-left: 1.5rem;"></ul>
+          </div>
+          <div style="text-align: center;">
+            <div class="mb-2 stat-label">Viability Score</div>
+            <canvas id="gaugeCanvas" width="200" height="200" style="margin:0 auto; display:block;"></canvas>
+            <div class="mt-4 stat-label">Time Required</div>
+            <div class="stat-value text-accent2" style="font-size:2rem;" id="rep-time">--</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 6: Virtual Lab -->
+    <section id="chapter6">
+      <h2 class="section-title">Virtual Lab</h2>
+      <p class="mb-4">Adjust conditions in the bioreactor and watch the tissue respond in real-time.</p>
+      
+      <div class="grid-2">
+        <div class="card">
+          <div class="form-group">
+            <label>Oxygen Level: <span id="lab-val-o2">21</span>%</label>
+            <input type="range" id="lab-o2" min="0" max="100" value="21" oninput="updateLab()">
+          </div>
+          <div class="form-group">
+            <label>Nutrient Concentration: <span id="lab-val-nut">70</span>%</label>
+            <input type="range" id="lab-nut" min="0" max="100" value="70" oninput="updateLab()">
+          </div>
+          <div class="form-group">
+            <label>Scaffold Pore Size: <span id="lab-val-pore">200</span> µm</label>
+            <input type="range" id="lab-pore" min="10" max="500" value="200" oninput="updateLab()">
+          </div>
+          <div class="form-group">
+            <label>Hydrogel Stiffness: <span id="lab-val-stiff">10</span> kPa</label>
+            <input type="range" id="lab-stiff" min="0.1" max="100" step="0.1" value="10" oninput="updateLab()">
+          </div>
+        </div>
+        
+        <div>
+          <div class="card mb-4" style="padding:1rem; text-align:center;">
+            <h4 class="mb-0">Tissue Status: <span id="lab-status" class="text-accent">Growing</span></h4>
+          </div>
+          <div class="canvas-container">
+            <canvas id="labCanvas" width="500" height="300" style="width:100%; display:block;"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 7: Ethical Debate -->
+    <section id="chapter7">
+      <h2 class="section-title">Ethical Debate</h2>
+      <p class="mb-4">Explore the moral dimensions of tissue engineering and organ allocation.</p>
+      
+      <div class="card" id="ethics-quiz">
+        <div class="progress-wrapper mb-4">
+          <div class="progress-bar-bg" style="height:4px;">
+            <div class="progress-bar-fill" id="ethics-progress" style="width:20%"></div>
+          </div>
+        </div>
+        
+        <h3 class="mb-4" id="ethics-q">Question 1</h3>
+        <div class="nav-links mb-4" id="ethics-options">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      
+      <div class="card" id="ethics-results" style="display:none;">
+        <h3 class="mb-4">Your Ethical Profile</h3>
+        <p class="mb-4" id="ethics-desc"></p>
+        <div class="chart-container" style="height:300px;">
+          <canvas id="ethicsChart"></canvas>
+        </div>
+        <button class="btn mt-4" onclick="resetEthics()">Retake Assessment</button>
+      </div>
+    </section>
+
+    <!-- Chapter 8: Future Tech -->
+    <section id="chapter8">
+      <h2 class="section-title">The Future</h2>
+      
+      <div class="grid-2 mb-4">
+        <div class="card">
+          <h4 class="text-accent mb-2">Bioprinting</h4>
+          <p class="text-sm text-muted">3D printing with bio-inks containing living cells to build complex tissue structures layer by layer.</p>
+        </div>
+        <div class="card">
+          <h4 class="text-accent mb-2">CRISPR Editing</h4>
+          <p class="text-sm text-muted">Gene editing to remove viral sequences from animal organs (xenotransplantation) or make universal donor cells.</p>
+        </div>
+        <div class="card">
+          <h4 class="text-accent mb-2">Digital Twins</h4>
+          <p class="text-sm text-muted">Computational models of patient organs to simulate how engineered tissues will integrate before physical manufacturing.</p>
+        </div>
+        <div class="card">
+          <h4 class="text-accent mb-2">Nanotechnology</h4>
+          <p class="text-sm text-muted">Smart scaffolds embedded with nanosensors to monitor tissue health and trigger localized drug release.</p>
+        </div>
+      </div>
+      
+      <h3 class="mb-2 mt-4">Timeline of Milestones</h3>
+      <div class="timeline-container">
+        <div class="timeline">
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">1954</div><div class="timeline-content">First successful kidney transplant</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">1967</div><div class="timeline-content">First heart transplant (Barnard)</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">1988</div><div class="timeline-content">First tissue-engineered skin</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">1999</div><div class="timeline-content">Lab-grown bladder in animal</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">2006</div><div class="timeline-content">iPSC cells discovered</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">2011</div><div class="timeline-content">Lab-grown trachea in human</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">2016</div><div class="timeline-content">Bioprinted mini-hearts</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">2022</div><div class="timeline-content">Pig kidney xenotransplant</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">2030</div><div class="timeline-content">Vascularized kidney expected</div></div>
+          <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-year">2050</div><div class="timeline-content">On-demand organ printing</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Research Analysis -->
+    <section id="research">
+      <h2 class="section-title">Research Analysis</h2>
+      <p class="mb-4">A review of landmark studies in tissue engineering.</p>
+      
+      <div class="card" style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Institution</th>
+              <th>Organ</th>
+              <th>Achievement</th>
+              <th>Biggest Challenge</th>
+              <th>Year</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Wake Forest</td><td>Bladder</td><td>Human clinical trials achieved</td><td>Scaling vascularization</td><td>1999-2011</td></tr>
+            <tr><td>Harvard Wyss</td><td>Heart tissue</td><td>Functional beating heart patch</td><td>Full organ vascularization</td><td>2012</td></tr>
+            <tr><td>Organovo</td><td>Liver tissue</td><td>Drug testing model</td><td>Not yet transplantable</td><td>2014</td></tr>
+            <tr><td>MIT Langer Lab</td><td>Cartilage</td><td>FDA-approved scaffold</td><td>Load-bearing limitations</td><td>2010</td></tr>
+            <tr><td>Columbia</td><td>Bone</td><td>Patient-specific bone grafts</td><td>Vascular integration</td><td>2016</td></tr>
+            <tr><td>Wake Forest ITRI</td><td>Kidney</td><td>Partial kidney function in animal</td><td>Complete nephron structure</td><td>2020</td></tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="card">
+        <h3 class="mb-4">Pattern Analysis</h3>
+        <ul class="text-muted" style="margin-left: 1.5rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <li>Vascularization appears in nearly every study as the primary bottleneck.</li>
+          <li>Simpler, avascular tissues (bladder, cartilage) have advanced furthest toward clinical use.</li>
+          <li>Complex organs (kidney, heart) show functional promise but remain pre-clinical.</li>
+          <li>Decellularized scaffolds consistently outperform synthetic in cell attachment.</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // --- Navigation & Routing ---
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+
+    function navigate(id) {
+      window.location.hash = id;
+    }
+
+    function showSection(id) {
+      if (!id) id = 'home';
+      id = id.replace('#', '');
+      
+      sections.forEach(sec => sec.classList.remove('active'));
+      navLinks.forEach(link => link.classList.remove('active'));
+      
+      const targetSec = document.getElementById(id);
+      if (targetSec) {
+        targetSec.classList.add('active');
+        const targetLink = document.querySelector(`.nav-link[data-target="${id}"]`);
+        if (targetLink) targetLink.classList.add('active');
+      } else {
+        document.getElementById('home').classList.add('active');
+      }
+      
+      window.scrollTo(0, 0);
+      
+      // Close mobile sidebar
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('open');
+      }
+
+      // Specific section initializations
+      if (id === 'home') initHomeStats();
+      if (id === 'chapter3') initMaterialsChart();
+      if (id === 'chapter6') initLabCanvas();
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        navigate(link.getAttribute('data-target'));
+      });
+    });
+
+    menuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+
+    window.addEventListener('hashchange', () => {
+      showSection(window.location.hash);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      showSection(window.location.hash || 'home');
+      
+      // Init builder interactions
+      document.querySelectorAll('.builder-item').forEach(item => {
+        item.addEventListener('click', () => {
+          item.classList.toggle('selected');
+        });
+      });
+
+      // Init simulator step 1
+      document.querySelectorAll('.organ-card').forEach(card => {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('.organ-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          const organ = card.getAttribute('data-val');
+          document.getElementById('sim-target-organ').innerText = organ;
+          document.getElementById('sim-step-2').style.display = 'block';
+          document.getElementById('sim-report').style.display = 'none';
+        });
+      });
+
+      initEthicsQuiz();
+    });
+
+    // --- Chapter Home Stats ---
+    let statsAnimated = false;
+    function initHomeStats() {
+      if (statsAnimated) return;
+      statsAnimated = true;
+      
+      const elements = ['stat-waiting', 'stat-transplants', 'stat-time'].map(id => document.getElementById(id));
+      
+      elements.forEach(el => {
+        const target = parseInt(el.getAttribute('data-target'));
+        const duration = 2000;
+        const start = performance.now();
+        
+        function update(currentTime) {
+          const elapsed = currentTime - start;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          // Easing out quart
+          const ease = 1 - Math.pow(1 - progress, 4);
+          const current = Math.floor(ease * target);
+          
+          el.innerText = current.toLocaleString() + (target > 100 ? '+' : '');
+          
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          }
+        }
+        requestAnimationFrame(update);
+      });
+    }
+
+    // --- Chapter 1: Wait Time ---
+    function calculateWaitTime() {
+      const blood = document.getElementById('c1-blood').value;
+      const organ = document.getElementById('c1-organ').value;
+      const age = parseInt(document.getElementById('c1-age').value);
+      
+      let years = 0;
+      let compat = "Moderate";
+      let desc = "";
+
+      if(organ === 'Kidney') { years = 4; desc = "Kidneys are the most common transplant, but have the longest waiting list."; }
+      if(organ === 'Heart') { years = 0.8; compat = "High Risk"; desc = "Hearts cannot be stored long; urgency dictates priority."; }
+      if(organ === 'Liver') { years = 1.5; desc = "Liver allocation is based on MELD score (illness severity)."; }
+      if(organ === 'Lung') { years = 1.5; desc = "Lungs require strict size and blood matching."; }
+      if(organ === 'Pancreas') { years = 2.5; desc = "Often performed alongside a kidney transplant."; }
+
+      if(blood === 'O') {
+        years *= 1.3;
+        compat = "Difficult (Universal Donor, Restricted Recipient)";
+      } else if (blood === 'AB') {
+        years *= 0.7;
+        compat = "Favorable (Universal Recipient)";
+      }
+
+      if(age > 60) {
+        years *= 1.1; // slight reduction in priority for older
+      }
+
+      const resBox = document.getElementById('c1-results');
+      resBox.style.display = 'block';
+      document.getElementById('c1-res-time').innerText = years < 1 ? "< 1 Year" : (years.toFixed(1) + " Years");
+      document.getElementById('c1-res-compat').innerText = compat;
+      document.getElementById('c1-res-desc').innerText = desc;
+      
+      gsap.from(resBox, {opacity:0, y:20, duration:0.5});
+    }
+
+    // --- Chapter 2: Builder ---
+    function testOrganDesign() {
+      const selected = Array.from(document.querySelectorAll('.builder-item.selected')).map(el => el.getAttribute('data-type'));
+      const res = document.getElementById('build-result');
+      
+      if (!selected.includes('scaffold')) {
+        res.innerHTML = '<span class="text-accent2">Failure:</span> The tissue collapsed — cells had no structure to grow on.';
+        res.style.color = 'var(--text)';
+      } else if (!selected.includes('cells')) {
+        res.innerHTML = '<span class="text-accent2">Failure:</span> An empty scaffold is just plastic. You need living cells.';
+        res.style.color = 'var(--text)';
+      } else if (!selected.includes('factors')) {
+        res.innerHTML = '<span class="text-accent2">Failure:</span> Cell growth stalled — no chemical signals to trigger differentiation.';
+        res.style.color = 'var(--text)';
+      } else if (!selected.includes('vessels')) {
+        res.innerHTML = '<span class="text-accent2">Failure:</span> The tissue died — nutrients couldn\'t reach the core. Vascularization is critical.';
+        res.style.color = 'var(--text)';
+      } else {
+        res.innerHTML = '<span class="text-accent">Success!</span> Your tissue construct has all the necessary components to begin maturation.';
+        res.style.color = 'var(--accent)';
+      }
+    }
+
+    // --- Chapter 3: Chart ---
+    let matChart;
+    const matData = [
+      [6, 5, 9, 9, 4], // Collagen
+      [3, 9, 7, 8, 6], // Hydrogel
+      [8, 7, 9, 10, 2], // Decellularized
+      [9, 6, 5, 6, 8]  // Synthetic
+    ];
+    const matLabels = ['Strength', 'Flexibility', 'Cell Attachment', 'Biocompatibility', 'Cost Efficiency'];
+    
+    function initMaterialsChart() {
+      if (matChart) return;
+      const ctx = document.getElementById('materialsChart').getContext('2d');
+      Chart.defaults.color = '#94a3b8';
+      matChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: matLabels,
+          datasets: [{
+            label: 'Collagen',
+            data: matData[0],
+            backgroundColor: 'rgba(20, 184, 166, 0.2)',
+            borderColor: '#14b8a6',
+            pointBackgroundColor: '#14b8a6',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: '#1e3a5f' },
+              grid: { color: '#1e3a5f' },
+              pointLabels: { font: { size: 12, family: "'Inter', sans-serif" } },
+              ticks: { display: false, min: 0, max: 10 }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    function updateRadar(index) {
+      if (!matChart) return;
+      const names = ['Collagen', 'Hydrogel', 'Decellularized', 'Synthetic'];
+      const colors = ['#14b8a6', '#3b82f6', '#f59e0b', '#ec4899'];
+      
+      matChart.data.datasets[0].data = matData[index];
+      matChart.data.datasets[0].label = names[index];
+      matChart.data.datasets[0].borderColor = colors[index];
+      matChart.data.datasets[0].pointBackgroundColor = colors[index];
+      matChart.data.datasets[0].backgroundColor = colors[index] + '33'; // 20% opacity hex
+      matChart.update();
+    }
+
+    // --- Chapter 4: Designer ---
+    function calculateDesign() {
+      const scaffold = document.getElementById('d-scaffold').value;
+      const cells = document.getElementById('d-cells').value;
+      const factors = document.getElementById('d-factors').value;
+      const bioreactor = document.getElementById('d-reactor').value;
+      const vasc = document.getElementById('d-vasc').value;
+
+      let success = 50;
+      let rejection = 30;
+      let cost = 50000;
+      let time = 18;
+
+      // Logic
+      if(cells==='ipsc') { success+=15; rejection-=10; cost+=20000; time+=4; }
+      else if(cells==='embryonic') { success+=20; rejection+=15; cost+=15000; }
+      else if(cells==='adult') { success+=5; cost+=5000; }
+      else { success-=5; rejection+=10; }
+
+      if(scaffold==='ecm') { success+=15; rejection-=8; cost+=30000; time+=2; }
+      else if(scaffold==='collagen') { success+=10; cost+=10000; }
+      else if(scaffold==='hydrogel') { success+=5; cost+=15000; }
+      else { rejection+=12; cost+=5000; }
+
+      if(factors==='enhanced') { success+=10; cost+=15000; }
+      else if(factors==='custom') { success+=8; cost+=25000; time+=2; }
+      else if(factors==='minimal') { success-=10; cost-=5000; time+=4; }
+
+      if(bioreactor==='perfusion') { success+=10; cost+=15000; time-=2; }
+      else if(bioreactor==='rotating') { success+=8; cost+=10000; time-=1; }
+      else if(bioreactor==='hollow') { success+=5; cost+=8000; }
+      else { success-=5; time+=3; }
+
+      if(vasc==='bioprinted') { success+=15; cost+=40000; time+=3; }
+      else if(vasc==='preformed') { success+=10; cost+=20000; }
+      else if(vasc==='angio') { success+=5; cost+=5000; time+=4; }
+      else { success-=20; }
+
+      success = Math.min(Math.max(success, 0), 100);
+      rejection = Math.min(Math.max(rejection, 0), 100);
+
+      document.getElementById('res-success-val').innerText = success + '%';
+      document.getElementById('res-success-bar').style.width = success + '%';
+      
+      document.getElementById('res-reject-val').innerText = rejection + '%';
+      document.getElementById('res-reject-bar').style.width = rejection + '%';
+
+      document.getElementById('res-cost').innerText = '$' + cost.toLocaleString();
+      document.getElementById('res-time').innerText = time + ' mo';
+    }
+
+    // --- Chapter 5: Simulator Report ---
+    function generateReport() {
+      const organ = document.getElementById('sim-target-organ').innerText;
+      const cells = document.getElementById('sim-cells').options[document.getElementById('sim-cells').selectedIndex].text;
+      const scaffold = document.getElementById('sim-scaffold').options[document.getElementById('sim-scaffold').selectedIndex].text;
+      const print = document.getElementById('sim-print').options[document.getElementById('sim-print').selectedIndex].text;
+
+      let score = 40;
+      let time = "12-18";
+      let ch = [];
+      let imp = [];
+
+      if(organ === 'Bladder') {
+        score = 85; time = "2-4";
+        ch = ["Maintaining elasticity", "Preventing cellular detachment during filling"];
+        imp = ["Use mechanical strain bioreactor", "Integrate smooth muscle cells"];
+      } else if (organ === 'Heart') {
+        score = 35; time = "24-36";
+        ch = ["Aligning cardiomyocytes for synchronous beating", "Generating dense vascular networks for high O2 demand"];
+        imp = ["Electrical stimulation during culture", "Advanced co-culture with endothelial cells"];
+      } else if (organ === 'Kidney') {
+        score = 30; time = "36-48";
+        ch = ["Replicating complex nephron structure", "Achieving proper filtration barriers"];
+        imp = ["Microfluidic chip integration", "High-res laser bioprinting"];
+      } else if (organ === 'Liver') {
+        score = 45; time = "18-24";
+        ch = ["Hepatocyte rapid loss of function in vitro", "Biliary tree integration"];
+        imp = ["Spheroid culture prior to printing", "Continuous perfusion bioreactor"];
+      }
+
+      if(cells === 'iPSC') { score+=10; } else if (cells === 'Embryonic') { score+=5; ch.push("Ethical and regulatory hurdles with embryonic cells"); }
+      if(scaffold === 'Decellularized') { score+=15; }
+
+      score = Math.min(score, 100);
+
+      document.getElementById('rep-params').innerText = `${cells} cells • ${scaffold} scaffold • ${print} printing`;
+      document.getElementById('rep-challenges').innerHTML = ch.map(c => `<li>${c}</li>`).join('');
+      document.getElementById('rep-improvements').innerHTML = imp.map(c => `<li>${c}</li>`).join('');
+      document.getElementById('rep-time').innerText = time + " mo";
+
+      document.getElementById('sim-report').style.display = 'block';
+      gsap.from('#sim-report', {opacity:0, y:20, duration:0.5});
+
+      // Draw Gauge
+      const canvas = document.getElementById('gaugeCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0,0,200,200);
+      
+      const cx = 100, cy = 100, r = 80;
+      
+      // bg arc
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, Math.PI*0.75, Math.PI*2.25);
+      ctx.lineWidth = 15;
+      ctx.strokeStyle = '#1e3a5f';
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // val arc (animate)
+      let curScore = 0;
+      const endAngle = Math.PI*0.75 + (Math.PI*1.5 * (score/100));
+      
+      function drawGauge() {
+        if(curScore < score) {
+          curScore += 2;
+          const ca = Math.PI*0.75 + (Math.PI*1.5 * (curScore/100));
+          
+          ctx.clearRect(0,0,200,200);
+          
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, Math.PI*0.75, Math.PI*2.25);
+          ctx.strokeStyle = '#1e3a5f';
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, Math.PI*0.75, ca);
+          ctx.strokeStyle = curScore > 70 ? '#14b8a6' : (curScore > 40 ? '#f59e0b' : '#ef4444');
+          ctx.stroke();
+
+          ctx.fillStyle = '#fff';
+          ctx.font = '700 2rem "Space Grotesk"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(Math.floor(curScore), cx, cy);
+
+          requestAnimationFrame(drawGauge);
+        } else {
+          // final render
+          ctx.clearRect(0,0,200,200);
+          
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, Math.PI*0.75, Math.PI*2.25);
+          ctx.strokeStyle = '#1e3a5f';
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, Math.PI*0.75, endAngle);
+          ctx.strokeStyle = score > 70 ? '#14b8a6' : (score > 40 ? '#f59e0b' : '#ef4444');
+          ctx.stroke();
+
+          ctx.fillStyle = '#fff';
+          ctx.font = '700 2rem "Space Grotesk"';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(score, cx, cy);
+        }
+      }
+      drawGauge();
+    }
+
+    // --- Chapter 6: Virtual Lab ---
+    let labRunning = false;
+    let cells = [];
+    const rows = 10, cols = 15;
+    
+    function initLabCanvas() {
+      if(labRunning) return;
+      labRunning = true;
+      const canvas = document.getElementById('labCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      const cellW = canvas.width / cols;
+      const cellH = canvas.height / rows;
+
+      for(let y=0; y<rows; y++) {
+        for(let x=0; x<cols; x++) {
+          cells.push({
+            x: x * cellW + cellW/2,
+            y: y * cellH + cellH/2,
+            baseR: Math.random() * 4 + 4,
+            r: 0,
+            phase: Math.random() * Math.PI * 2,
+            healthy: true,
+            vessel: false
+          });
+        }
+      }
+
+      function render(time) {
+        if(!document.getElementById('chapter6').classList.contains('active')) {
+          requestAnimationFrame(render);
+          return;
+        }
+
+        const o2 = parseInt(document.getElementById('lab-o2').value);
+        const nut = parseInt(document.getElementById('lab-nut').value);
+        const pore = parseInt(document.getElementById('lab-pore').value);
+        const stiff = parseFloat(document.getElementById('lab-stiff').value);
+
+        // Optimal checks
+        const o2Ok = Math.abs(o2 - 21) < 10;
+        const nutOk = nut > 50 && nut < 90;
+        const poreOk = pore > 50 && pore < 350;
+        const stiffOk = stiff > 0.5 && stiff < 30;
+
+        let status = "Unstable";
+        let score = 0;
+        if(o2Ok) score++;
+        if(nutOk) score++;
+        if(poreOk) score++;
+        if(stiffOk) score++;
+
+        if(score === 4) status = "Forming Blood Vessels";
+        else if (score >= 2) status = "Growing";
+        else status = "Dying";
+
+        const statusEl = document.getElementById('lab-status');
+        statusEl.innerText = status;
+        statusEl.className = status === 'Dying' ? 'text-accent2' : 'text-accent';
+
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillRect(0,0, canvas.width, canvas.height);
+
+        cells.forEach(c => {
+          c.healthy = score >= 2;
+          c.vessel = score === 4;
+
+          // Pulse
+          let targetR = c.healthy ? c.baseR + Math.sin(time/300 + c.phase)*2 : 2;
+          if(c.vessel) targetR += 3;
+          
+          c.r += (targetR - c.r) * 0.1;
+
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+          
+          if(c.vessel) {
+            ctx.fillStyle = '#f59e0b';
+          } else if(c.healthy) {
+            ctx.fillStyle = '#14b8a6';
+          } else {
+            ctx.fillStyle = '#7f1d1d';
+          }
+          ctx.fill();
+        });
+
+        // Draw vessels
+        if(score === 4) {
+          ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          for(let i=0; i<cells.length; i+=3) {
+            if(i+1 < cells.length && Math.random() > 0.3) {
+               ctx.moveTo(cells[i].x, cells[i].y);
+               ctx.lineTo(cells[i+1].x, cells[i+1].y);
+            }
+          }
+          ctx.stroke();
+        }
+
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
+    }
+
+    function updateLab() {
+      ['o2', 'nut', 'pore', 'stiff'].forEach(id => {
+        document.getElementById(`lab-val-${id}`).innerText = document.getElementById(`lab-${id}`).value;
+      });
+    }
+
+    // --- Chapter 7: Ethics ---
+    const ethicsQuestions = [
+      {
+        q: "Should human organs be bought and sold on an open market?",
+        opts: [
+          {t: "Yes, it increases supply", u:1, d:0, v:0},
+          {t: "No, it exploits the poor", u:0, d:1, v:1},
+          {t: "Regulated market only", u:0.5, d:0, v:1}
+        ]
+      },
+      {
+        q: "Should embryonic stem cells be used for organ research?",
+        opts: [
+          {t: "Yes, the benefits outweigh concerns", u:1, d:0, v:0},
+          {t: "No, embryos have moral status", u:0, d:1, v:0},
+          {t: "Only if leftover from IVF", u:0.5, d:0.5, v:1}
+        ]
+      },
+      {
+        q: "Should gene editing (CRISPR) be used to create compatible donor organs?",
+        opts: [
+          {t: "Yes, if it saves lives", u:1, d:0, v:0},
+          {t: "No, too risky", u:0, d:1, v:0},
+          {t: "Only for somatic cells, not germline", u:0.5, d:0.5, v:1}
+        ]
+      },
+      {
+        q: "Should wealthy patients be able to pay for faster organ development?",
+        opts: [
+          {t: "Yes, private funding drives research", u:1, d:0, v:0},
+          {t: "No, access should be equal", u:0, d:1, v:1},
+          {t: "Tiered system with public minimum", u:0.5, d:0, v:0.5}
+        ]
+      },
+      {
+        q: "Should we pursue xenotransplantation (animal organs)?",
+        opts: [
+          {t: "Yes, any solution is worth trying", u:1, d:0, v:0},
+          {t: "No, animal welfare concerns", u:0, d:1, v:1},
+          {t: "Only with strict oversight", u:0.5, d:0, v:1}
+        ]
+      }
+    ];
+
+    let eqIndex = 0;
+    let eScores = {u:0, d:0, v:0};
+    let eChart;
+
+    function initEthicsQuiz() {
+      eqIndex = 0;
+      eScores = {u:0, d:0, v:0};
+      document.getElementById('ethics-results').style.display = 'none';
+      document.getElementById('ethics-quiz').style.display = 'block';
+      showEthicsQ();
+    }
+
+    function showEthicsQ() {
+      const q = ethicsQuestions[eqIndex];
+      document.getElementById('ethics-progress').style.width = ((eqIndex)/5 * 100) + '%';
+      document.getElementById('ethics-q').innerText = q.q;
+      
+      const optsBox = document.getElementById('ethics-options');
+      optsBox.innerHTML = '';
+      
+      q.opts.forEach((opt, idx) => {
+        const a = document.createElement('a');
+        a.className = 'nav-link';
+        a.style.border = '1px solid var(--border)';
+        a.innerText = opt.t;
+        a.onclick = () => answerEthics(idx);
+        optsBox.appendChild(a);
+      });
+    }
+
+    function answerEthics(idx) {
+      const opt = ethicsQuestions[eqIndex].opts[idx];
+      eScores.u += opt.u;
+      eScores.d += opt.d;
+      eScores.v += opt.v;
+      
+      eqIndex++;
+      if(eqIndex < ethicsQuestions.length) {
+        showEthicsQ();
+      } else {
+        finishEthics();
+      }
+    }
+
+    function finishEthics() {
+      document.getElementById('ethics-quiz').style.display = 'none';
+      document.getElementById('ethics-results').style.display = 'block';
+      
+      // Normalize to %
+      const max = 5;
+      const uPct = (eScores.u / max) * 100;
+      const dPct = (eScores.d / max) * 100;
+      const vPct = (eScores.v / max) * 100;
+
+      let dom = "Utilitarian";
+      if(dPct > uPct && dPct > vPct) dom = "Deontological";
+      if(vPct > uPct && vPct > dPct) dom = "Virtue Ethics";
+
+      let desc = "";
+      if(dom === 'Utilitarian') desc = "Your choices lean heavily toward Utilitarianism — prioritizing the greatest good for the greatest number. You tend to favor rapid technological progress and increased supply over restrictive rules.";
+      else if(dom === 'Deontological') desc = "Your choices lean toward Deontological (duty-based) ethics. You prioritize strict moral rules, inherent rights, and protecting the vulnerable, even if it means slower technological progress.";
+      else desc = "Your choices align with Virtue Ethics. You favor moderation, strict regulatory oversight, and character-driven approaches that seek balanced, equitable solutions rather than extremes.";
+
+      document.getElementById('ethics-desc').innerText = desc;
+
+      if(eChart) eChart.destroy();
+      const ctx = document.getElementById('ethicsChart').getContext('2d');
+      eChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Utilitarian', 'Deontological', 'Virtue Ethics'],
+          datasets: [{
+            data: [uPct, dPct, vPct],
+            backgroundColor: ['#14b8a6', '#f59e0b', '#3b82f6']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { min: 0, max: 100, ticks: { color: '#94a3b8' }, grid: { color: '#1e3a5f' } },
+            x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    function resetEthics() {
+      initEthicsQuiz();
+    }
+  </script>
+</body>
+</html>
